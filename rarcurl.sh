@@ -29,6 +29,6 @@ unrar e "$filename.rar"
 # deletes the downloaded rar's
 find "../Peliculas" -type f -name "$filename.r*" -exec rm '{}' +
 
-# TODO: Download the Spanish subtitle automagically
-# TESTING without actual real filename
-# subliminal "$filename.mkv" -l es -e utf --addic7ed-username blah-blah --addic7ed-password somewheretogo
+# downloads the spanish subtitle
+file=$(ls -lht | head -2 | tail -1 | awk '{print $9}')
+subliminal download -l es -e  utf 8 "$file" "$file"
