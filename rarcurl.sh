@@ -31,4 +31,4 @@ find "../Peliculas" -type f -name "$filename.r*" -exec rm '{}' +
 
 # downloads the spanish subtitle
 file=$(ls -lht | head -2 | tail -1 | awk '{print $9}')
-subliminal download -l es -e  utf 8 "$file" "$file"
+subliminal download -l es -e  utf 8 "$file"
