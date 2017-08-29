@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-
 import getpass,sys
 from sqlite3 import dbapi2 as database
 
@@ -25,6 +24,8 @@ sources_from_db = []
 for row in db.execute(query):
     source_dict = eval(row[4])
     for i in source_dict:
+
+        # Checks if the command has a special query for video sources
         if no_filter or i['source'] in sys.argv[1:]:
             sources_from_db.append(i)
 
