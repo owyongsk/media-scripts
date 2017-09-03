@@ -2,6 +2,8 @@
 import os, re, sys, urllib
 
 def stop_now(query="Stop now? [y/n]"):
+    if len(sys.argv) == 1:
+        return
     if raw_input(query) == 'y':
         sys.exit()
 
