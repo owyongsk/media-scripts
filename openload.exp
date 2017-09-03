@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+spawn /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --headless --disable-gpu --repl $argv
+set timeout 60
+
+expect "Javascript"
+send "document.getElementById('videooverlay').dispatchEvent(new Event('click'));\r"
+send "document.getElementsByClassName('vjs-big-play-button')\[0\].\r"
+send "   dispatchEvent(new Event('click'));\r"
+send "video = document.querySelector('#olvideo_html5_api').src;\r"
+expect "openload"
