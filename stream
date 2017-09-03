@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+import os, re, sys, urllib
+
+url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&~+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+streams   = os.popen("./skodus.sh openload.co").read()
+urls      = re.findall(url_regex, streams)
+
+for url in urls:
+    filename = url.split("/")[-1]
+    filetype = filename.split(".")[-1].lower()
+
+    if "mkv.mp4" in filename.lower():
+        continue
+    elif filetype == 'mp4':
+        "Gets the URL of the mp4 from openload"
+        resp    = urllib.urlopen(url)
+        outputs = os.popen("./openload.exp %s" % (url)).read()
+        mp4_url = re.findall(url_regex, outputs)[1]
+
+        os.system("subliminal download -l es -e utf8 %s" % (filename))
+        os.system("srt2vtt %ses.srt" % (filename[:-3]))
+        print mp4_url
+        break
