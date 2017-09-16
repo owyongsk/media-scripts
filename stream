@@ -28,14 +28,33 @@ for url in urls:
         print mp4_url
         stop_now()
 
-        "Downloads the subtitle in Spanish"
-        os.system("subliminal download -l es -e utf8 %s" % (filename))
+        print("Downloading the subtitle in Spanish...")
+        srt, subs = None, None
+        essub = os.popen("subliminal download -l es -e utf8 %s" % (filename)).read()
         stop_now()
 
-        "Converts it to vtt"
-        os.system("srt2vtt %ses.srt" % (filename[:-3]))
-        stop_now()
+        if len(re.findall('Downloaded 0 subtitle',essub)) == 1:
+            print("Downloading the English subs...")
+            ensub = os.popen("subliminal download -l en -e utf8 %s" % (filename)).read()
+            stop_now()
 
-        "Casting it to Chromecast"
-        os.system("cast -subtitles %ses.vtt -playurl %s" % (filename[:-3], mp4_url))
+            if len(re.findall('Downloaded 1 subtitle',ensub)) == 1:
+                print("Translating the English subs to Espanol...")
+                doublesub = os.system("doublesub -T es -F en -t -f %s.en.srt" % (filename[:-4]))
+                srt = "%s.en-es.srt" % (filename[:-4])
+                stop_now()
+
+        else:
+            srt = "%s.es.srt" % (filename[:-4])
+
+
+        if srt:
+            print("Converting it to vtt...")
+            os.system("srt2vtt %s" % (srt))
+            subs = "-subtitles %s.vtt " % srt[:-4]
+            stop_now()
+
+
+        print("Casting it to Chromecast...")
+        os.system("cast %s-playurl %s" % (subs, mp4_url))
         break
