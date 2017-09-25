@@ -29,7 +29,7 @@ for url in urls:
         stop_now()
 
         print("Downloading the subtitle in Spanish...")
-        srt, subs = None, None
+        srt, subs = None, ""
         essub = os.popen("subliminal download -l es -e utf8 %s" % (filename)).read()
         stop_now()
 
