@@ -57,7 +57,7 @@ for url in urls:
 
         if sys.argv[1] == "download":
             print("Downloading the file...")
-            os.system("curl -C - -L -O %s" % (mp4_url))
+            os.system("curl -C - -L -o %s %s" % (filename, mp4_url))
         elif sys.argv[1] == "cast":
             print("Casting it to Chromecast...")
             os.system("cast %s-playurl %s" % (subs, mp4_url))
