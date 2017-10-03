@@ -21,28 +21,30 @@ for url in urls:
     if "mkv.mp4" in filename.lower():
         continue
     elif filetype == 'mp4':
-        "Gets the URL of the mp4 from openload"
+        print("Getting the URL of the mp4 from openload...")
         resp    = urllib.urlopen(url)
         outputs = os.popen("./openload.exp %s" % (url)).read()
-        mp4_url = re.findall(url_regex, outputs)[1]
-        print mp4_url
-        stop_now()
+
+        try:
+            mp4_url = re.findall(url_regex, outputs)[1]
+        except IndexError:
+            print("Can't find URL here...")
+            continue
+
+        print("Found url:   %s" % (mp4_url))
 
         print("Downloading the subtitle in Spanish...")
         srt, subs = None, ""
         essub = os.popen("subliminal download -l es -e utf8 %s" % (filename)).read()
-        stop_now()
 
         if len(re.findall('Downloaded 0 subtitle',essub)) == 1:
             print("Downloading the English subs...")
             ensub = os.popen("subliminal download -l en -e utf8 %s" % (filename)).read()
-            stop_now()
 
             if len(re.findall('Downloaded 1 subtitle',ensub)) == 1:
                 print("Translating the English subs to Espanol...")
                 doublesub = os.system("doublesub -T es -F en -t -f %s.en.srt" % (filename[:-4]))
                 srt = "%s.en-es.srt" % (filename[:-4])
-                stop_now()
 
         else:
             srt = "%s.es.srt" % (filename[:-4])
@@ -52,9 +54,12 @@ for url in urls:
             print("Converting it to vtt...")
             os.system("srt2vtt %s" % (srt))
             subs = "-subtitles %s.vtt " % srt[:-4]
-            stop_now()
 
+        if sys.argv[1] == "download":
+            print("Downloading the file...")
+            os.system("curl -C - -L -O %s" % (mp4_url))
+        elif sys.argv[1] == "cast":
+            print("Casting it to Chromecast...")
+            os.system("cast %s-playurl %s" % (subs, mp4_url))
 
-        print("Casting it to Chromecast...")
-        os.system("cast %s-playurl %s" % (subs, mp4_url))
         break
