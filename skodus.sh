@@ -27,7 +27,8 @@ for row in db.execute(query):
 
         # Checks if the command has a special query for video sources
         if no_filter or i['source'] in sys.argv[1:]:
-            sources_from_db.append(i)
+            if i['url'] not in map(lambda x: x['url'], sources_from_db):
+                sources_from_db.append(i)
 
 for i in sources_from_db:
     print i['source'] + " - " + i['quality'] + " - " + i['url']
