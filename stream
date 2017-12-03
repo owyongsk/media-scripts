@@ -1,3 +1,20 @@
+########
+#
+#  Script to help automate the download or chromecasting TV or movies from
+#  Kodi's Exodus plugin
+#
+#  Run by `./stream download` or `./stream cast`
+#
+#  Requirements:
+#    python
+#    google chrome
+#    subliminal                          at https://github.com/Diaoul/subliminal
+#    stream2chromecast (aliased as cast) at https://github.com/Pat-Carter/stream2chromecast
+#    ffmpeg
+#
+########
+
+
 #!/usr/bin/python
 import os, re, sys, urllib
 
@@ -6,6 +23,7 @@ def stop_now(query="Stop now? [y/n]"):
         return
     if raw_input(query) == 'y':
         sys.exit()
+
 
 "Script starts here"
 
@@ -45,7 +63,6 @@ for url in urls:
                 print("Translating the English subs to Espanol...")
                 doublesub = os.system("doublesub -T es -F en -t -f %s.en.srt" % (filename[:-4]))
                 srt = "%s.en-es.srt" % (filename[:-4])
-
         else:
             srt = "%s.es.srt" % (filename[:-4])
 
@@ -53,11 +70,14 @@ for url in urls:
         if srt:
             print("Converting it to vtt...")
             os.system("srt2vtt %s" % (srt))
-            subs = "-subtitles %s.vtt " % srt[:-4]
+            subs_opts = "-subtitles %s.vtt " % srt[:-4]
 
         if sys.argv[1] == "download":
             print("Downloading the file...")
             os.system("curl -C - -L -o %s %s" % (filename, mp4_url))
+
+            print("Adding subs into mp4 file")
+            os.system("ffmpeg -i %s -i %s -c copy -c:s mov_text %s.mp4" % (filename, srt, srt[:-4]))
         elif sys.argv[1] == "cast":
             print("Casting it to Chromecast...")
             os.system("cast %s-playurl %s" % (subs, mp4_url))
