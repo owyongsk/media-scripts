@@ -13,6 +13,8 @@ last_imdb_id_q = "SELECT imdb_id FROM rel_src ORDER BY added DESC LIMIT 1"
 last_season_q  = "SELECT season  FROM rel_src ORDER BY added DESC LIMIT 1"
 last_episode_q = "SELECT episode FROM rel_src ORDER BY added DESC LIMIT 1"
 
+# db.execute("drop * from rel_src;")
+
 query = """
 SELECT * FROM rel_src WHERE
 imdb_id = (%s) AND
