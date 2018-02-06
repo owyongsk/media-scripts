@@ -51,18 +51,20 @@ for url in urls:
 
         print("Found url:   %s" % (mp4_url))
 
-        print("Downloading the subtitle in Spanish...")
+        print("Downloading the subtitles in Spanish...")
         srt, subs = None, ""
         essub = os.popen("subliminal download -l es -e utf8 %s" % (filename)).read()
 
         if len(re.findall('Downloaded 0 subtitle',essub)) == 1:
-            print("Downloading the English subs...")
+            print("Downloading the subtitle in English instead...")
             ensub = os.popen("subliminal download -l en -e utf8 %s" % (filename)).read()
 
             if len(re.findall('Downloaded 1 subtitle',ensub)) == 1:
                 print("Translating the English subs to Espanol...")
                 doublesub = os.system("doublesub -T es -F en -t -f %s.en.srt" % (filename[:-4]))
                 srt = "%s.en-es.srt" % (filename[:-4])
+            else:
+                print("Could not find the English subs too!")
         else:
             srt = "%s.es.srt" % (filename[:-4])
 
@@ -76,8 +78,9 @@ for url in urls:
             print("Downloading the file...")
             os.system("curl -C - -L -o %s %s" % (filename, mp4_url))
 
-            print("Adding subs into mp4 file")
-            os.system("ffmpeg -i %s -i %s -c copy -c:s mov_text %s.mp4" % (filename, srt, srt[:-4]))
+            if srt:
+                print("Adding subs into mp4 file")
+                os.system("ffmpeg -i %s -i %s -c copy -c:s mov_text %s.mp4" % (filename, srt, srt[:-4]))
         elif sys.argv[1] == "cast":
             print("Casting it to Chromecast...")
             os.system("cast %s-playurl %s" % (subs, mp4_url))
