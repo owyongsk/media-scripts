@@ -7,7 +7,7 @@ kodi_path = "/Users/"+getpass.getuser()+"/Library/Application Support/Kodi"
 no_filter = True if len(sys.argv) == 1 else False
 
 db = database.connect(kodi_path+
-    "/userdata/addon_data/plugin.video.exodus/providers.13.db").cursor()
+    "/userdata/addon_data/plugin.video.incursion/providers.13.db").cursor()
 
 last_imdb_id_q = "SELECT imdb_id FROM rel_src ORDER BY added DESC LIMIT 1"
 last_season_q  = "SELECT season  FROM rel_src ORDER BY added DESC LIMIT 1"

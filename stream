@@ -7,6 +7,7 @@
 #  Run by `./stream download` or `./stream cast`
 #
 #  Requirements:
+#    incursion
 #    python
 #    google chrome
 #    subliminal                          at https://github.com/Diaoul/subliminal
@@ -83,6 +84,6 @@ for url in urls:
                 os.system("ffmpeg -i %s -i %s -c copy -c:s mov_text %s.mp4" % (filename, srt, srt[:-4]))
         elif sys.argv[1] == "cast":
             print("Casting it to Chromecast...")
-            os.system("cast %s-playurl %s" % (subs, mp4_url))
+            os.system("cast %s-playurl %s" % (subs_opts, mp4_url))
 
         break
